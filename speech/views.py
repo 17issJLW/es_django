@@ -11,7 +11,7 @@ class SpeechRecognition(APIView):
         request_data = request.data
         file = request_data.get("file")
         with open("temp.wav","wb") as f:
-            f.write(file)
+            f.write(file.read())
 
         try:
             res = audio_recognition("temp.wav")
