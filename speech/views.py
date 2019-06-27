@@ -13,7 +13,6 @@ class SpeechRecognition(APIView):
         file2 = request_data.get("file2")
         print(file2)
         print(file)
-        print(file.read())
         with open("temp.wav","wb") as f:
             f.write(file.read())
 
