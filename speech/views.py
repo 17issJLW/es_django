@@ -10,6 +10,10 @@ class SpeechRecognition(APIView):
     def post(self,request):
         request_data = request.data
         file = request_data.get("file")
+        file2 = request_data.get("file2")
+        print(file2)
+        print(file)
+        print(file.read())
         with open("temp.wav","wb") as f:
             f.write(file.read())
 
