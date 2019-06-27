@@ -7,3 +7,5 @@ def audio_recognition(audio_file):
         r.adjust_for_ambient_noise(source,duration=1)
         audio = r.record(source)
         res = r.recognize_sphinx(audio).replace(" ",'')
+
+    return res
