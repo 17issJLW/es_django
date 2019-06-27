@@ -9,7 +9,7 @@ class SpeechRecognition(APIView):
 
     def post(self,request):
         request_data = request.data
-        file = request.get("file")
+        file = request_data.get("file")
         with open("temp.wav","wb") as f:
             f.write(file)
 
