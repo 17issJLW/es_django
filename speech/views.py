@@ -13,10 +13,10 @@ class SpeechRecognition(APIView):
         print(file)
         with open("temp.wav","wb") as f:
             f.write(file.read())
-        # try:
-        res = audio_recognition("temp.wav")
-        # except:
-        #     return Response({"error":"Could not understand audio"},status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        try:
+            res = audio_recognition("temp.wav")
+        except:
+            return Response({"error":"Could not understand audio"},status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
         return Response({"result":res},status=status.HTTP_200_OK)
 
