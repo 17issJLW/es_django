@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/2.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
-
+import configparser
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -23,14 +23,25 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '2=bfpj%n1y@7d09!mdt6x35#k1v7_!9t0f()m!%f&rzj%n=i5l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+config = configparser.RawConfigParser()
+config.read(os.path.join(BASE_DIR, 'config.ini'), encoding='utf8')
+environment = config['BASE']['environment']
+print('Reading configurations from config.ini, detected environment {environment}'.format(environment=environment))
+local_config = config[environment]
+DEBUG = local_config.getboolean('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
+TOKEN_SECRET = "Eejie7Uedaig"
+
+ES_SPRING = "https://cjsearch.ziqiang.net.cn/api/"
+EMAIL_HTML = '''请点击链接激活账号 链接： <a href = "http://211.159.186.47:9555/esadmin/register/{}">http://211.159.186.47:9555/esadmin/register/{}?timestamp={}</a>'''
 
 # Application definition
 
 INSTALLED_APPS = [
+
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +50,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'speech',
+    'esadmin',
+    'esspider',
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -74,14 +89,54 @@ WSGI_APPLICATION = 'es_django.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
+import pymysql
+pymysql.install_as_MySQLdb()
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': local_config['DATABASE_ENGINE'],
+        'USER': local_config['DATABASE_USER'],
+        'PASSWORD': local_config['DATABASE_PASSWD'],
+        'NAME': local_config['DATABASE_NAME'],
+        'HOST': local_config['DATABASE_HOST'],
+        'PORT': local_config['DATABASE_PORT'],
+        'TEST': {'CHARSET': 'UTF8', },
+    },
+}
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': local_config['CACHE_LOCATION'],
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
 }
 
+REDIS_TIMEOUT=7*24*60*60
+CUBES_REDIS_TIMEOUT=60*60
+NEVER_REDIS_TIMEOUT=365*24*60*60*4
+
+CELERY_BROKER_URL = local_config['CELERY_BROKER_URL']   #'amqp://guest:jlw123456@localhost:5672'
+CELERY_RESULT_BACKEND = local_config['CELERY_RESULT_BACKEND']  #'django-db'
+CELERYD_FORCE_EXECV = True
+CELERYD_MAX_TASKS_PER_CHILD = 10
+# celery -A es_django worker -l info -P eventlet
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_SSL = True
+EMAIL_HOST = local_config['EMAIL_HOST']
+EMAIL_PORT = local_config['EMAIL_PORT']
+#发送邮件的邮箱
+EMAIL_HOST_USER = local_config['EMAIL_HOST_USER']
+#在邮箱中设置的客户端授权密码
+EMAIL_HOST_PASSWORD = local_config['EMAIL_HOST_PASSWORD']
+#收件人看到的发件人
+EMAIL_FROM = local_config['EMAIL_FROM']
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
