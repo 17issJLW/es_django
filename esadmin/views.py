@@ -321,8 +321,8 @@ class UserLogin(APIView):
 
 class CommentView(APIView):
 
-    def get(self,request,doc):
-        queryset = Comment.objects.filter(doc=doc)
+    def get(self,request,uuid):
+        queryset = Comment.objects.filter(doc=uuid)
         page = Pagination()
         result = page.paginate_queryset(queryset=queryset, request=request, view=self)
         serializer = CommentSerializer(result, many=True)
