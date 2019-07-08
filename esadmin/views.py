@@ -242,7 +242,7 @@ class Register(APIView):
             )
             encodeuid = base64.b64encode(str(user.uid).encode('utf-8'))
             send_mail(subject="【CJ Search】邮箱验证", message="", from_email=settings.EMAIL_FROM, recipient_list=[data["email"]],
-                      html_message=settings.EMAIL_HTML.format(str(encodeuid,"utf8"),str(encodeuid,"utf8"),int(time.time())))
+                      html_message=settings.EMAIL_HTML.format(str(encodeuid,"utf8"),str(encodeuid,"utf8")))
             return Response({
                              "username": user.username,
                              "type": user.role.role_name,
