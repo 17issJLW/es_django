@@ -38,3 +38,9 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("username","password","email")
+
+class RoleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Roles
+        fields = "__all__"

@@ -20,5 +20,6 @@ urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),
     path('admin/', admin.site.urls),
     path("speech/",include('speech.urls')),
-    path("esadmin/",include('esadmin.urls'))
+    path("esadmin/",include('esadmin.urls')),
+    path("esspider/",include('esspider.urls'))
 ]

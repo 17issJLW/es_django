@@ -371,4 +371,19 @@ class CommentView(APIView):
             return Response({"ok"},status=status.HTTP_200_OK)
         raise NotFound
 
+class RoleView(APIView):
+
+    @check_admin_token
+    def get(self,request):
+        roles = Roles.objects.all()
+        serializer = RoleSerializer(roles,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+    @check_admin_token
+    def post(self,request):
+        serializer = RoleSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response({"ok"},status=status.HTTP_200_OK)
+        raise BadRequest
 
