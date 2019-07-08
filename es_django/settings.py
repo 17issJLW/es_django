@@ -35,7 +35,7 @@ ALLOWED_HOSTS = ['*']
 TOKEN_SECRET = "Eejie7Uedaig"
 
 ES_SPRING = "https://cjsearch.ziqiang.net.cn/api/"
-EMAIL_HTML = '''请点击链接激活账号 链接： <a href = "http://211.159.186.47:9555/esadmin/register/{}">http://211.159.186.47:9555/esadmin/register/{}?timestamp={}</a>'''
+EMAIL_HTML = '''请点击链接激活账号 链接： <a href = "http://localhost:8080/#/?{}">http://localhost:8080/#/?{}?timestamp={}</a>'''
 
 # Application definition
 

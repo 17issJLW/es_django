@@ -36,11 +36,11 @@ def get_doc(self,uuid):
     with open(pdf_path + '/' + uuid + '.pdf', 'wb') as f:
         f.write(res.content)
     # 将pdf二进制数据转为txt
-    txt = readPDF(open(pdf_path + '/' + uuid + '.pdf',"rb"))
-    time.sleep(5)
+    txt = parse_pdf_to_txt(pdf_path + '/' + uuid + '.pdf')
+    time.sleep(3)
     print(txt)
-    dict_json = open_text_new(uuid=uuid,text=txt,root=os.getcwd()+"/esspider")
-    title = get_title_new(txt)
+    dict_json = getdict(txt)
+    title = get_title(txt)
     update_pdf(uuid=uuid,text_tilte=title,root=os.getcwd()+"/esspider/pdf_data/")
     DocData.objects.create(doc_dict=dict_json,uuid=uuid)
 
