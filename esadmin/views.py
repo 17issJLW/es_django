@@ -162,8 +162,8 @@ class UserManageView(APIView):
         queryset = User.objects.all()
         if data.get("username"):
             queryset = queryset.filter(username__icontains=data.get("username"))
-        if data.get("role"):
-            queryset = queryset.filter(role__role_name=data.get("role"))
+        if data.get("role_name"):
+            queryset = queryset.filter(role__role_name=data.get("role_name"))
         if data.get("is_active"):
             queryset = queryset.filter(is_active=data.get("is_active"))
         page = Pagination()
@@ -175,8 +175,8 @@ class UserManageView(APIView):
     @transaction.atomic()
     def post(self,request):
         serializer = UserSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True) and request.data.get("role"):
-            role = Roles.objects.filter(role_name=request.data.get("role")).first()
+        if serializer.is_valid(raise_exception=True) and request.data.get("role_name"):
+            role = Roles.objects.filter(role_name=request.data.get("role_name")).first()
             if not role:
                 raise NotFound
             User.objects.create(
@@ -198,8 +198,8 @@ class UserManageView(APIView):
             raise NotFound
         serializer = UserSerializer(user,data=request.data)
         if serializer.is_valid(raise_exception=True):
-            if request.data.get("role"):
-                role = Roles.objects.filter(role_name=request.data.get("role")).first()
+            if request.data.get("role_name"):
+                role = Roles.objects.filter(role_name=request.data.get("role_name")).first()
                 if not role:
                     raise NotFound
                 user.role = role
