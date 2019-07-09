@@ -196,23 +196,18 @@ class UserManageView(APIView):
         user = User.objects.filter(uid=uid).first()
         if not user:
             raise NotFound
-        serializer = UserSerializer(user,data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            if request.data.get("role_name"):
-                role = Roles.objects.filter(role_name=request.data.get("role_name")).first()
-                if not role:
-                    raise NotFound
-                user.role = role
-                user.username = serializer.validated_data["username"]
-                user.password = serializer.validated_data["password"]
-                user.email = serializer.validated_data["email"]
-                user.is_active = serializer.validated_data["is_active"]
-                user.save()
-            else:
-                print(serializer.validated_data)
-                serializer.save()
-            return Response(request.data,status=status.HTTP_200_OK)
-        raise BadRequest
+        if request.data.get("role_name"):
+            role = Roles.objects.filter(role_name=request.data.get("role_name")).first()
+            if not role:
+                raise NotFound
+            user.role = role
+        if request.data.get("email"):
+            user.email = request.data.get("email")
+        if request.data.get("is_active"):
+            user.is_active = request.data.get("is_active")
+        user.save()
+        return Response(request.data,status=status.HTTP_200_OK)
+
 
     @check_admin_token
     def delete(self,request,uid):

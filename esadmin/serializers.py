@@ -15,6 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+
 class CommentSerializer(serializers.ModelSerializer):
 
     uuid = serializers.ReadOnlyField(read_only=True)
