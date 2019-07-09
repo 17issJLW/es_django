@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from lib.rest_framework.permissions import *
 from .serializers import *
+from esspider.utils.get_keywords import *
 from rest_framework import status
 # Create your views here.
 class Pagination(PageNumberPagination):
@@ -91,3 +92,12 @@ class AccountManage(APIView):
             raise NotFound
         account.delete()
         return Response({"ok"}, status=status.HTTP_200_OK)
+
+
+class SuggestView(APIView):
+
+    def get(self,request):
+
+        data = request.GET.get("keyword")
+        dict_res = get_keywords(data)
+        return Response(dict_res,status=status.HTTP_200_OK)

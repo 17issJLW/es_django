@@ -8,4 +8,6 @@ urlpatterns = [
     # path("<uid>", AdminView.as_view(), name="AdminView"),
     path("doc_data_manage/", DocDataView.as_view(),name="DocDataView"),
     path("doc_data_manage/<id>", DocDataView.as_view(),name="DocDataView"),
+
+    path("suggest/", SuggestView.as_view(),name="SuggestView"),
 ]
