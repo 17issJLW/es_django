@@ -10,4 +10,5 @@ urlpatterns = [
     path("doc_data_manage/<id>", DocDataView.as_view(),name="DocDataView"),
 
     path("suggest/", SuggestView.as_view(),name="SuggestView"),
+    path("confirm_doc/", AddDocToEs.as_view(),name="AddDocToEs"),
 ]

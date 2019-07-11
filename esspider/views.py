@@ -6,7 +6,9 @@ from rest_framework.pagination import PageNumberPagination
 from lib.rest_framework.permissions import *
 from .serializers import *
 from esspider.utils.get_keywords import *
+import requests
 from rest_framework import status
+import json
 # Create your views here.
 class Pagination(PageNumberPagination):
     """
@@ -101,3 +103,23 @@ class SuggestView(APIView):
         data = request.GET.get("keyword")
         dict_res = get_keywords(data)
         return Response(dict_res,status=status.HTTP_200_OK)
+
+
+class AddDocToEs(APIView):
+
+    @check_admin_token
+    def post(self,request):
+        sess = requests.session()
+        headers = {
+            "content-type": "application/json"
+        }
+        doc_id = request.data.get("doc_id")
+        doc_list = DocData.objects.filter(id__in=doc_id)
+        for i in doc_list:
+            doc = json.loads(i.doc_dict.replace("\'", "\""))
+            doc["stage"] = [doc["stage"]]
+            doc["contentSize"] = len(doc["content"])
+            doc["weight"] = 1
+            r = sess.post("http://127.0.0.1:8080/doc/manage",data=json.dumps(doc),headers=headers)
+            # print(doc)
+        return Response({"ok"},status=status.HTTP_200_OK)
