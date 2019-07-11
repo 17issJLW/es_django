@@ -78,7 +78,10 @@ def getdict(text_word):
     # 真正的分段 换行符后首行两个空格 最初的str中应该不会有 &#& 把
     content = re.sub(r'\n  ', '&#&  ', content)
     # 每行字数限制造成的换行  但换行符后是“裁判结果”之类的是真的需要换行 排除
-    content = re.sub(r'\n(?=[^裁判结果\|审判\|人民陪审员\|陪审员\|书记员\|二〇\|一九])', '', content)
+    content = re.sub(r'\n', '', content)
+    # content = re.sub(r'\n(?=([^裁判结果\|\^审判\|\^人民\|\^陪审员\|\^书记员\|\^二〇\|\^一九]))', '', content)
+    content = re.sub(r'(?=裁判结果|审判长|审判员|审 判 长|审 判 员|人民审判员|代理审判员|书记员|书 记 员|二〇|一九)', '\n', content)
+    content = re.sub(r'(?<=人民|代理)(?=审判员)', '', content)
     # 真正的分段 恢复
     content = re.sub(r'&#&  ', '\n  ', content)
     str = content
