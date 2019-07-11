@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from lib.rest_framework.permissions import *
 from .serializers import *
+from django.db import transaction
 from esspider.utils.get_keywords import *
 import requests
 from rest_framework import status
@@ -108,6 +109,7 @@ class SuggestView(APIView):
 class AddDocToEs(APIView):
 
     @check_admin_token
+    @transaction.atomic()
     def post(self,request):
         sess = requests.session()
         headers = {
@@ -122,4 +124,5 @@ class AddDocToEs(APIView):
             doc["weight"] = 1
             r = sess.post("http://127.0.0.1:8080/doc/manage",data=json.dumps(doc),headers=headers)
             # print(doc)
+        doc_list.delete()
         return Response({"ok"},status=status.HTTP_200_OK)
